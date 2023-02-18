@@ -6,16 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task 04</title>
+    <style>
+        .error {
+            color: red;
+            display: none;
+        }
+
+        .visible {
+            display: unset;
+        }
+
+        .unvalidate {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 
 <body>
     Операнд 1: <input id="input1" type="text"> <br />
+    <span id="input1Error" class="error">Введите значение</span> <br />
+
     Операнд 2: <input id="input2" type="text"> <br />
+    <span id="input2Error" class="error">Введите значение</span> <br />
+
 
     <button id="add-btn">+</button>
     <button id="rem-btn">-</button>
     <button id="mul-btn">*</button>
     <button id="div-btn">/</button>
+    <button id="reset-btn">reset</button>
 
     <script>
         /*
@@ -30,22 +49,73 @@
         let remBtn = document.querySelector("#rem-btn");
         let mulBtn = document.querySelector("#mul-btn");
         let divBtn = document.querySelector("#div-btn");
+        let resBtn = document.querySelector("#reset-btn");
+        let spanMessageError1 = document.querySelector("#input1Error");
+        let spanMessageError2 = document.querySelector("#input2Error");
 
-        addBtn.addEventListener("click", function () {
-            alert(Number(input1.value) + Number(input2.value));
+        // addBtn.addEventListener("click", function () {
+        //     alert(Number(input1.value) + Number(input2.value));
+        // });
+
+        // remBtn.addEventListener("click", function () {
+        //     alert(input1.value - input2.value);
+        // });
+
+        // mulBtn.addEventListener("click", function () {
+        //     alert(input1.value * input2.value);
+        // });
+
+        // divBtn.addEventListener("click", function () {
+        //     alert(input1.value / input2.value);
+        // });
+
+        document.querySelector("body").addEventListener("click", handlerClick);
+
+        function handlerClick(e) {
+            let id = e.target.id;
+            switch (id) {
+                case "add-btn": {
+                    isValidate() && alert(Number(input1.value) + Number(input2.value));
+                    break;
+                }
+                case "rem-btn": {
+                    isValidate() && alert(input1.value - input2.value);
+                    break;
+                }
+                case "mul-btn": {
+                    isValidate() && alert(input1.value * input2.value);
+                    break;
+                }
+                case "div-btn": {
+                    isValidate() && alert(input1.value / input2.value);
+                    break;
+                }
+            }
+        }
+
+        resBtn.addEventListener("click", function () {
+            input1.value = 0;
+            input2.value = 0;
+            isValidate();
         });
 
-        remBtn.addEventListener("click", function () {
-            alert(input1.value - input2.value);
-        });
+        function isValidate() {
+            let value1Validate = createViewValidate(input1, spanMessageError1);
+            let value2Validate = createViewValidate(input2, spanMessageError2);
+            return value1Validate && value2Validate;
 
-        mulBtn.addEventListener("click", function () {
-            alert(input1.value * input2.value);
-        });
-
-        divBtn.addEventListener("click", function () {
-            alert(input1.value / input2.value);
-        });
+            function createViewValidate(nodeInput, nodeSpanMessage) {
+                if ((nodeInput.value === "") || (isNaN(nodeInput.value))) {
+                    nodeSpanMessage.classList.add("visible");
+                    nodeInput.classList.add("unvalidate");
+                    return false;
+                } else {
+                    nodeSpanMessage.classList.remove("visible");
+                    nodeInput.classList.remove("unvalidate");
+                    return true;
+                }
+            }
+        }
     </script>
 </body>
 
