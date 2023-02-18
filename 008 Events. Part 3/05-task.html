@@ -54,16 +54,37 @@
         Все элементы с классом interactiveElement должны поддерживать перетаскивание мышью, при левом клике клавиши по элементу он должен перемещаться
         за курсором до момента обжатия клавиши мыши.
         */
+        let nodePanel = document.querySelector("#interactivePanel");
+        let move = false;
+        let currentDiv;
+        let zIndex = 1;
+        const nodeButton = document.querySelector("#generateButton");
+        const heightButtonY = parseInt(getComputedStyle(nodeButton, null).height);
+        console.log(heightButtonY)
+
+        nodeButton.addEventListener("click", addElement);
+
+        function addElement() {
+            let nodeDiv = document.querySelectorAll(".interactiveElement");
+            nodeDiv !== null && nodeDiv.forEach(node => node.remove());
+
+            for (let i = 0; i < 100; i++) {
+                nodePanel.append(generateElement());
+            }
+
+        }
+
 
         // Создает и возвращает div с классом interactiveElement со случайной позицией в текущем окне
         function generateElement() {
             let div = document.createElement("div");
             div.classList.add("interactiveElement");
             let maxLeft = window.innerWidth - 50; // ширина текущего документа
-            let maxTop = window.innerHeight - 150; // высота текущего документа
+            let maxTop = window.innerHeight - 100; // высота текущего документа
             div.style.top = getRandomValue(maxTop) + "px";
             div.style.left = getRandomValue(maxLeft) + "px";
             div.style.backgroundColor = getRandomColor();
+            div.style.zIndex = 0;
             return div;
         }
 
@@ -81,6 +102,29 @@
         function getRandomValue(max) {
             return Math.floor(Math.random() * max);
         }
+
+        // обработчик один на все div, которые вложены в элемент #interactivePanel
+        nodePanel.addEventListener("mousedown", function (e) {
+            if (e.target.className === "interactiveElement") {
+                console.log(e.target.className)
+                move = true;
+                offsetX = e.offsetX;
+                offsetY = e.offsetY + heightButtonY;
+                currentDiv = e.target; // запоминаем div, который будет перемещаться
+                currentDiv.style.zIndex = zIndex++; // задаем слой для div, который будет больше чем у всех
+            }
+        });
+
+        document.addEventListener("mousemove", function (e) {
+            if (move) {
+                currentDiv.style.top = e.clientY - offsetY + "px";
+                currentDiv.style.left = e.clientX - offsetX + "px";
+            }
+        });
+
+        document.addEventListener("mouseup", function (e) {
+            move = false;
+        });
     </script>
 </body>
 
