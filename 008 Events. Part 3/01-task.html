@@ -15,6 +15,23 @@
         Задание:
         Добавьте для кнопки два обработчика, один должен сработать в фазе capturing, второй - в фазе bubbling
         */
+        let nodeButton = document.querySelector("button");
+        let nodeBody = document.querySelector("body");
+
+        nodeButton.addEventListener("click", handlerDown, true);
+        nodeButton.addEventListener("click", handlerUp);
+
+        function handlerDown(e) {
+            nodeBody.insertAdjacentHTML("beforeend", "<p>Обработчик кнопки: Фаза погружения (capturin) ⇓ - срабатывает первым</p>");
+            alert("Обработчик кнопки: Фаза погружения ⇓ (capturin)");
+            console.log("capturing: " + e.target.nodeName);
+        }
+
+        function handlerUp(e) {
+            nodeBody.insertAdjacentHTML("beforeend", "<p>Обработчик кнопки: Фаза всплытия (bubbling) ⇑ - срабатывает вторым</p>");
+            alert("Обработчик кнопки: Фаза всплытия ⇑ (bubbling)");
+            console.log("bubbling: " + e.target);
+        }
     </script>
 </body>
 
